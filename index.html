@@ -1,0 +1,3698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFSP · Portal do Aluno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:          #F4F3EF;   /* warm off-white canvas */
+      --surface:     #FFFFFF;
+      --surface-2:   #F8F8F5;
+      --border:      #E4E3DE;
+      --border-2:    #ECEAE4;
+      --text-1:      #141413;   /* heading */
+      --text-2:      #5C5B57;   /* secondary */
+      --text-3:      #9B9A96;   /* muted */
+      --accent:      #2F6B3E;   /* IFSP Green — deep & muted */
+      --accent-bg:   #EBF3ED;
+      --accent-2:    #C5364A;   /* IFSP Red — accent only */
+      --accent-2-bg: #FCEEF0;
+      --amber:       #D97706;
+      --amber-bg:    #FEF3C7;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   14px;
+      --shadow-sm:   0 1px 2px rgba(0,0,0,.05);
+      --shadow-md:   0 2px 8px rgba(0,0,0,.07);
+      --shadow-lg:   0 4px 20px rgba(0,0,0,.08);
+    }
+
+    /* ─── BASE ─── */
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ─── UTILITÁRIOS ─── */
+    .hidden { display: none !important; }
+    .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ════════════════════════════════════════
+       LOGIN
+    ════════════════════════════════════════ */
+    #login-view {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .login-brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .login-brand-text h1 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+    }
+
+    .login-brand-text p {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .form-input-wrap {
+      position: relative;
+    }
+
+    .form-input-wrap .icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--text-3);
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 10px 0 32px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text-1);
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .form-input-wrap .eye-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-primary {
+      width: 100%;
+      height: 38px;
+      background: var(--text-1);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity .15s;
+      margin-top: 20px;
+    }
+
+    .btn-primary:hover { opacity: .85; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0;
+      color: var(--text-3);
+      font-size: 11px;
+    }
+    .login-divider::before,
+    .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .btn-secondary {
+      width: 100%;
+      height: 36px;
+      background: var(--surface-2);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .15s;
+    }
+    .btn-secondary:hover { background: var(--border-2); color: var(--text-1); }
+
+    .login-error {
+      background: var(--accent-2-bg);
+      border: 1px solid #F9BFCA;
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--accent-2);
+      margin-top: 12px;
+    }
+
+    /* ════════════════════════════════════════
+       LAYOUT PRINCIPAL
+    ════════════════════════════════════════ */
+    #dashboard-view {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: 220px;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 12px;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 8px 20px;
+      border-bottom: 1px solid var(--border-2);
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .sidebar-brand img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+    }
+
+    .sidebar-brand span {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 8px;
+      margin-bottom: 4px;
+      margin-top: 16px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .12s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .sidebar-item:hover { background: var(--bg); color: var(--text-1); }
+
+    .sidebar-item.active {
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .sidebar-item .icon { width: 15px; height: 15px; flex-shrink: 0; }
+
+    .sidebar-badge {
+      margin-left: auto;
+      background: var(--amber-bg);
+      color: var(--amber);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-2);
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--accent-bg);
+      flex-shrink: 0;
+      border: 1.5px solid var(--border);
+    }
+
+    .sidebar-user-info { overflow: hidden; flex: 1; }
+    .sidebar-user-name { font-size: 12px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-user-sub  { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+
+    /* ─── CONTEÚDO PRINCIPAL ─── */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(244, 243, 239, .9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-search {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+    }
+
+    .topbar-search .icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 13px;
+      height: 13px;
+      color: var(--text-3);
+      pointer-events: none;
+    }
+
+    .topbar-search input {
+      width: 100%;
+      height: 34px;
+      padding: 0 10px 0 30px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-1);
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .topbar-search input:focus { border-color: var(--accent); }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+    .topbar-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      transition: all .12s;
+    }
+    .topbar-btn:hover { background: var(--bg); color: var(--text-1); }
+    .topbar-btn .icon { width: 13px; height: 13px; }
+
+    .topbar-icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      cursor: pointer;
+      color: var(--text-2);
+      transition: all .12s;
+    }
+    .topbar-icon-btn:hover { background: var(--bg); color: var(--text-1); }
+    .topbar-icon-btn .icon { width: 14px; height: 14px; }
+
+    /* ─── PAGE ─── */
+    .page { padding: 28px; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    /* ─── GREETING ─── */
+    .page-greeting {
+      margin-bottom: 24px;
+    }
+
+    .page-greeting p {
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: 500;
+      letter-spacing: .02em;
+      margin-bottom: 4px;
+    }
+
+    .page-greeting h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.03em;
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: -0.01em;
+    }
+
+    .section-action {
+      font-size: 12px;
+      color: var(--text-3);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color .12s;
+    }
+    .section-action:hover { color: var(--text-1); }
+
+    /* ─── SEMESTER TABS ─── */
+    .sem-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+    }
+
+    .sem-tab {
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-3);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      transition: all .12s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sem-tab:hover { color: var(--text-1); }
+    .sem-tab.active { background: var(--surface); color: var(--text-1); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+    .sem-count {
+      background: var(--accent-bg);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 5px;
+    }
+
+    .sem-tab.active .sem-count { background: var(--accent); color: white; }
+
+    /* ─── COURSES GRID ─── */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .course-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .course-card:hover {
+      border-color: #C8C6C0;
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .course-cover {
+      height: 110px;
+      background: var(--surface-2);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .course-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .3s;
+    }
+
+    .course-card:hover .course-cover img { transform: scale(1.04); }
+
+    .course-cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(255,255,255,.7));
+    }
+
+    .course-body {
+      padding: 12px 14px;
+    }
+
+    .course-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-bg);
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-bottom: 6px;
+      letter-spacing: .01em;
+    }
+
+    .course-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .course-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-2);
+    }
+
+    .course-students {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-3);
+    }
+    .course-students .icon { width: 11px; height: 11px; }
+
+    .course-arrow {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .12s;
+    }
+    .course-card:hover .course-arrow { background: var(--accent); color: white; }
+    .course-arrow .icon { width: 11px; height: 11px; }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 48px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+
+    /* ════════════════════════════════════════
+       TASKS
+    ════════════════════════════════════════ */
+    .tasks-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      transition: all .12s;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 6px;
+    }
+
+    .task-item:hover { border-color: #C8C6C0; }
+
+    .task-item.expired {
+      opacity: .55;
+      background: var(--surface-2);
+    }
+
+    .task-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+
+    .task-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .task-icon-wrap.active-task { background: var(--accent-bg); color: var(--accent); }
+    .task-icon-wrap.expired-task { background: var(--surface-2); color: var(--text-3); }
+    .task-icon-wrap.urgent-task { background: var(--accent-2-bg); color: var(--accent-2); }
+    .task-icon-wrap.soon-task { background: var(--amber-bg); color: var(--amber); }
+    .task-icon-wrap .icon { width: 14px; height: 14px; }
+
+    .task-info { flex: 1; min-width: 0; }
+
+    .task-course {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .task-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-due {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 3px;
+    }
+    .task-due .icon { width: 11px; height: 11px; }
+
+    .task-badge {
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    .badge-accent { background: var(--accent-bg); color: var(--accent); }
+    .badge-red    { background: var(--accent-2-bg); color: var(--accent-2); }
+    .badge-amber  { background: var(--amber-bg); color: var(--amber); }
+    .badge-muted  { background: var(--surface-2); color: var(--text-3); border: 1px solid var(--border); }
+
+    .task-link {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-2);
+      text-decoration: none;
+      background: var(--surface-2);
+      transition: all .12s;
+    }
+    .task-link:hover { background: var(--text-1); color: white; border-color: var(--text-1); }
+    .task-link .icon { width: 11px; height: 11px; }
+
+    .show-expired-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      background: var(--surface-2);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      transition: all .12s;
+      margin-top: 8px;
+    }
+    .show-expired-btn:hover { background: var(--surface); color: var(--text-1); border-style: solid; }
+    .show-expired-btn .icon { width: 13px; height: 13px; }
+
+    .expired-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 12px 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-top: 1px solid var(--border-2);
+      margin-top: 8px;
+    }
+    .expired-section-label .icon { width: 12px; height: 12px; }
+
+    /* ════════════════════════════════════════
+       CALENDÁRIO
+    ════════════════════════════════════════ */
+    .calendar-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 16px;
+    }
+
+    .calendar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .calendar-month {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .cal-legend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--text-3);
+    }
+    .cal-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .cal-weekday {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-3);
+      letter-spacing: .04em;
+      padding: 2px 0;
+    }
+
+    .cal-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .12s;
+      position: relative;
+      gap: 2px;
+    }
+
+    .cal-day:hover { background: var(--bg); color: var(--text-1); }
+
+    .cal-day.today {
+      background: var(--text-1);
+      color: white;
+      font-weight: 700;
+    }
+
+    .cal-day.has-event .event-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .cal-day.today .event-dot { background: rgba(255,255,255,.7); }
+
+    .cal-day.selected:not(.today) {
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ─── EVENTS PANEL ─── */
+    .events-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .events-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+
+    .events-sub {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-bottom: 16px;
+    }
+
+    .event-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-2);
+    }
+
+    .event-item:last-child { border-bottom: none; }
+
+    .event-dot-bar {
+      width: 3px;
+      height: 36px;
+      border-radius: 2px;
+      background: var(--amber);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .event-course {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .event-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-top: 2px;
+    }
+
+    .event-time {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+
+    .no-events {
+      padding: 32px 0;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 12px;
+    }
+
+    /* ════════════════════════════════════════
+       COURSE PAGE (TELA COMPLETA)
+    ════════════════════════════════════════ */
+    .course-page-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      padding: 0;
+      margin-bottom: 20px;
+      transition: color .12s;
+    }
+    .course-page-back:hover { color: var(--text-1); }
+    .course-page-back .icon { width: 14px; height: 14px; }
+
+    .course-page-header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .course-page-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-bg);
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-bottom: 8px;
+    }
+
+    .course-page-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+
+    .course-page-id {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 4px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .course-page-ext {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-2);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: all .12s;
+    }
+    .course-page-ext:hover { background: var(--bg); color: var(--text-1); }
+    .course-page-ext .icon { width: 12px; height: 12px; }
+
+    /* ════════════════════════════════════════
+       ASSIGNMENT PAGE (DETALHES E ENVIO)
+    ════════════════════════════════════════ */
+    .assign-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .assign-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .assign-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+
+    .assign-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      padding: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+    }
+
+    .assign-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .assign-meta-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .assign-meta-val {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .assign-intro-box {
+      font-size: 13px;
+      color: var(--text-1);
+      line-height: 1.6;
+      padding: 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+    }
+
+    .assign-intro-box p { margin-bottom: 8px; }
+    .assign-intro-box p:last-child { margin-bottom: 0; }
+
+    .assign-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      background: var(--surface-2);
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .assign-upload-zone:hover {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+
+    .assign-upload-zone input { display: none; }
+
+    /* ════════════════════════════════════════
+       CHAT / MENSAGENS DO MOODLE
+    ════════════════════════════════════════ */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 16px;
+      height: calc(100vh - 120px);
+      min-height: 520px;
+    }
+
+    .chat-sidebar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-sidebar-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-search-input {
+      width: 100%;
+      height: 32px;
+      padding: 0 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-1);
+      outline: none;
+      font-family: inherit;
+    }
+    .chat-search-input:focus { border-color: var(--accent); }
+
+    .chat-conv-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .chat-conv-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-2);
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .chat-conv-item:hover { background: var(--surface-2); }
+    .chat-conv-item.active { background: var(--accent-bg); }
+
+    .chat-conv-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--border-2);
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+
+    .chat-conv-info { flex: 1; min-width: 0; }
+    .chat-conv-top { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+    .chat-conv-name { font-size: 12px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-conv-time { font-size: 10px; color: var(--text-3); flex-shrink: 0; }
+    .chat-conv-preview { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+    .chat-main {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-2);
+    }
+
+    .chat-header-user { display: flex; align-items: center; gap: 10px; }
+    .chat-header-name { font-size: 13px; font-weight: 600; color: var(--text-1); }
+    .chat-header-sub { font-size: 11px; color: var(--text-3); }
+
+    .chat-messages {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--bg);
+    }
+
+    .chat-bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .chat-bubble p { margin: 0 0 6px 0; }
+    .chat-bubble p:last-child { margin-bottom: 0; }
+
+    .chat-bubble.sent {
+      align-self: flex-end;
+      background: var(--text-1);
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-bubble.sent a { color: #86efac; text-decoration: underline; }
+    .chat-bubble.sent pre, .chat-bubble.sent code { background: rgba(255,255,255,.1); padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+
+    .chat-bubble.received {
+      align-self: flex-start;
+      background: var(--surface);
+      color: var(--text-1);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 2px;
+      box-shadow: var(--shadow-sm);
+    }
+    .chat-bubble.received a { color: var(--accent); text-decoration: underline; }
+    .chat-bubble.received pre, .chat-bubble.received code { background: var(--surface-2); padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+
+    .chat-bubble-time {
+      font-size: 9px;
+      opacity: .65;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .chat-input-bar {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      height: 38px;
+      padding: 0 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-1);
+      font-family: inherit;
+      outline: none;
+    }
+    .chat-input:focus { border-color: var(--accent); background: var(--surface); }
+
+    .chat-send-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--text-1);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .12s;
+    }
+    .chat-send-btn:hover { opacity: .85; }
+    .chat-send-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    .chat-attach-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .12s;
+      flex-shrink: 0;
+    }
+    .chat-attach-btn:hover {
+      background: var(--surface);
+      color: var(--text-1);
+      border-color: var(--text-3);
+    }
+    .chat-attach-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .chat-attach-wrapper {
+      position: relative;
+    }
+    .chat-attach-menu {
+      position: absolute;
+      bottom: 46px;
+      left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 220px;
+      z-index: 50;
+    }
+    .chat-attach-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-xs);
+      border: none;
+      background: transparent;
+      color: var(--text-1);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: background .12s;
+    }
+    .chat-attach-menu-item:hover {
+      background: var(--surface-2);
+      color: var(--accent);
+    }
+    .chat-attach-menu-item .icon {
+      width: 15px;
+      height: 15px;
+      color: var(--text-2);
+    }
+
+    .chat-file-card {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      padding: 8px 14px !important;
+      border-radius: var(--radius-sm) !important;
+      margin-top: 6px !important;
+      text-decoration: none !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      transition: all .12s !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      cursor: pointer !important;
+    }
+    .chat-file-card * {
+      pointer-events: none !important;
+    }
+    .chat-bubble.sent .chat-file-card {
+      background: rgba(255, 255, 255, 0.16) !important;
+      border: 1px solid rgba(255, 255, 255, 0.28) !important;
+      color: #fff !important;
+    }
+    .chat-bubble.sent .chat-file-card:hover {
+      background: rgba(255, 255, 255, 0.24) !important;
+    }
+    .chat-bubble.received .chat-file-card {
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text-1) !important;
+      box-shadow: var(--shadow-sm) !important;
+    }
+    .chat-bubble.received .chat-file-card:hover {
+      background: var(--surface-2) !important;
+    }
+
+    /* ─── SECTIONS ─── */
+    .course-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .course-section-header {
+      padding: 14px 18px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+    .course-section-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+      flex: 1;
+    }
+
+    .course-module-count {
+      font-size: 10px;
+      color: var(--text-3);
+      background: var(--border-2);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    /* ─── MODULES ─── */
+    .module-list { display: flex; flex-direction: column; }
+
+    .module-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--border-2);
+      transition: background .12s;
+    }
+
+    .module-item:last-child { border-bottom: none; }
+    .module-item:hover { background: var(--surface-2); }
+
+    .module-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+
+    .module-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+    }
+
+    .mi-pdf    { background: #FEF2F2; color: #DC2626; }
+    .mi-drive  { background: #EFF6FF; color: #2563EB; }
+    .mi-assign { background: var(--amber-bg); color: var(--amber); }
+    .mi-link   { background: #F0FDF4; color: #16A34A; }
+    .mi-folder { background: #F5F3FF; color: #7C3AED; }
+    .mi-label  { background: var(--surface-2); color: var(--text-3); }
+
+    .module-icon .icon { width: 13px; height: 13px; }
+
+    .module-info { flex: 1; min-width: 0; }
+
+    .module-type {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 2px;
+    }
+
+    .module-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .module-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    .mod-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      transition: all .12s;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-2);
+    }
+    .mod-btn .icon { width: 11px; height: 11px; }
+    .mod-btn:hover { background: var(--bg); color: var(--text-1); }
+
+    .mod-btn-primary {
+      background: var(--text-1);
+      color: white;
+      border-color: var(--text-1);
+    }
+    .mod-btn-primary:hover { background: #333; border-color: #333; color: white; }
+
+    /* Pastas: arquivos em linha */
+    .folder-files {
+      padding: 8px 18px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      border-top: 1px solid var(--border-2);
+      background: var(--surface-2);
+    }
+
+    .file-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-2);
+      text-decoration: none;
+      font-family: 'Courier New', monospace;
+      transition: all .12s;
+    }
+    .file-chip:hover { background: var(--text-1); color: white; border-color: var(--text-1); }
+    .file-chip .icon { width: 11px; height: 11px; }
+
+    /* label block */
+    .label-block {
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border-2);
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.5;
+      background: var(--surface-2);
+    }
+    .label-block:last-child { border-bottom: none; }
+
+    /* ─── LOADING ─── */
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      gap: 10px;
+      color: var(--text-3);
+      font-size: 12px;
+    }
+    .spin {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── TOPBAR MOBILE ─── */
+    .mobile-tabs {
+      display: none;
+      align-items: center;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 12px;
+    }
+
+    .mobile-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-3);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+      transition: all .12s;
+    }
+
+    .mobile-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .mobile-tab .icon { width: 14px; height: 14px; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .mobile-tabs { display: flex; }
+      .topbar-search { max-width: 200px; }
+      .page { padding: 16px; }
+      .stats-row { grid-template-columns: 1fr; gap: 8px; }
+      .calendar-layout { grid-template-columns: 1fr; }
+      .courses-grid { grid-template-columns: 1fr 1fr; }
+      .chat-layout { grid-template-columns: 1fr; height: auto; }
+      .chat-sidebar { max-height: 240px; }
+      .chat-main { min-height: 420px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════
+       LOGIN
+  ══════════════════════════════ -->
+  <div id="login-view">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="assets/logo-if.png" alt="IFSP">
+        <div class="login-brand-text">
+          <h1>IFSP Araraquara</h1>
+          <p>Portal do Aluno · ADS 2026</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Servidor Moodle</label>
+        <div class="form-input-wrap">
+          <i data-lucide="globe" class="icon"></i>
+          <input class="form-input" id="server-url" type="text" value="https://moodle.arq.ifsp.edu.br">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Prontuário / Matrícula</label>
+        <div class="form-input-wrap">
+          <i data-lucide="user" class="icon"></i>
+          <input class="form-input" id="username" type="text" placeholder="Seu prontuário">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <div class="form-input-wrap">
+          <i data-lucide="lock" class="icon"></i>
+          <input class="form-input" id="password" type="password" placeholder="••••••••">
+          <button class="eye-btn" onclick="togglePwd()">
+            <i id="eye-icon" data-lucide="eye" style="width:14px;height:14px;color:var(--text-3)"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="login-error" class="login-error hidden"></div>
+
+      <button class="btn-primary" id="btn-login" onclick="handleLogin()">
+        <span id="btn-login-text">Entrar no Portal</span>
+        <i data-lucide="arrow-right" style="width:14px;height:14px"></i>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       DASHBOARD PRINCIPAL
+  ══════════════════════════════ -->
+  <div id="dashboard-view" style="display:none;min-height:100vh;flex-direction:row;">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand" onclick="backToCoursesView()">
+        <img src="assets/logo-if.png" alt="IFSP">
+        <span>IFSP · ADS</span>
+      </div>
+
+      <div class="sidebar-section-label">Menu</div>
+
+      <button class="sidebar-item active" id="side-nav-courses" onclick="switchTab('courses')">
+        <i data-lucide="layout-grid" class="icon"></i>
+        Disciplinas
+        <span class="sidebar-badge" id="side-badge-courses" style="background:var(--accent-bg);color:var(--accent)">6</span>
+      </button>
+
+      <button class="sidebar-item" id="side-nav-tasks" onclick="switchTab('tasks')">
+        <i data-lucide="check-square" class="icon"></i>
+        Tarefas & Prazos
+        <span class="sidebar-badge" id="side-badge-tasks">0</span>
+      </button>
+
+      <button class="sidebar-item" id="side-nav-timetable" onclick="switchTab('timetable')">
+        <i data-lucide="calendar-days" class="icon"></i>
+        Calendário
+      </button>
+
+      <button class="sidebar-item" id="side-nav-chat" onclick="switchTab('chat')">
+        <i data-lucide="message-square" class="icon"></i>
+        Mensagens & Chat
+        <span class="sidebar-badge" id="side-badge-chat" style="display:none;background:var(--accent-bg);color:var(--accent)">0</span>
+      </button>
+
+      <div class="sidebar-section-label">Links</div>
+
+      <a class="sidebar-item" href="https://suap.ifsp.edu.br" target="_blank">
+        <i data-lucide="external-link" class="icon"></i>
+        SUAP Portal
+      </a>
+
+      <a class="sidebar-item" href="https://moodle.arq.ifsp.edu.br" target="_blank">
+        <i data-lucide="globe" class="icon"></i>
+        Moodle Oficial
+      </a>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img id="side-avatar" class="sidebar-avatar" src="" alt="">
+          <div class="sidebar-user-info">
+            <div id="side-name" class="sidebar-user-name">Carregando…</div>
+            <div id="side-sub" class="sidebar-user-sub">ADS 2026</div>
+          </div>
+        </div>
+        <button class="sidebar-item" style="color:var(--accent-2)" onclick="handleLogout()">
+          <i data-lucide="log-out" class="icon"></i>
+          Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <div class="main-content">
+
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-search">
+          <i data-lucide="search" class="icon"></i>
+          <input type="text" id="quick-search" oninput="handleSearch()" placeholder="Buscar disciplina ou material…">
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" onclick="refreshAllData()" title="Atualizar">
+            <i data-lucide="refresh-cw" class="icon"></i>
+          </button>
+          <a class="topbar-btn" href="https://moodle.arq.ifsp.edu.br" target="_blank">
+            <i data-lucide="external-link" class="icon"></i>
+            Moodle
+          </a>
+          <img id="top-avatar" class="sidebar-avatar" src="" alt="" style="cursor:default">
+        </div>
+      </div>
+
+      <!-- MOBILE TABS -->
+      <div class="mobile-tabs">
+        <button class="mobile-tab active" id="mob-courses" onclick="switchTab('courses')">
+          <i data-lucide="layout-grid" class="icon"></i> Disciplinas
+        </button>
+        <button class="mobile-tab" id="mob-tasks" onclick="switchTab('tasks')">
+          <i data-lucide="check-square" class="icon"></i> Tarefas
+        </button>
+        <button class="mobile-tab" id="mob-timetable" onclick="switchTab('timetable')">
+          <i data-lucide="calendar-days" class="icon"></i> Calendário
+        </button>
+        <button class="mobile-tab" id="mob-chat" onclick="switchTab('chat')">
+          <i data-lucide="message-square" class="icon"></i> Chat
+        </button>
+      </div>
+
+      <!-- MAIN CONTENT AREA -->
+      <div id="main-tabs-view" style="flex:1">
+
+        <div class="page">
+
+          <!-- GREETING -->
+          <div class="page-greeting">
+            <p id="greeting-date">Hoje</p>
+            <h2 id="greeting-name">Olá, Fábio Henrique</h2>
+          </div>
+
+          <!-- ── ABA DISCIPLINAS ── -->
+          <section id="tab-courses">
+            <div class="section-header">
+              <span class="section-title">Minhas Disciplinas</span>
+              <div class="sem-tabs">
+                <button class="sem-tab active" id="sem-btn-20262" onclick="setSemesterFilter('20262')">
+                  2026/2 <span class="sem-count" id="sem-count-20262">6</span>
+                </button>
+                <button class="sem-tab" id="sem-btn-20261" onclick="setSemesterFilter('20261')">
+                  2026/1 <span class="sem-count" id="sem-count-20261">3</span>
+                </button>
+                <button class="sem-tab" id="sem-btn-all" onclick="setSemesterFilter('all')">
+                  Todas
+                </button>
+              </div>
+            </div>
+            <div class="courses-grid" id="courses-grid">
+              <div class="loading-state empty-state">
+                <div class="spin"></div>
+                <span>Carregando disciplinas…</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── ABA TAREFAS ── -->
+          <section id="tab-tasks" class="hidden">
+            <div class="section-header">
+              <span class="section-title">Tarefas & Prazos</span>
+              <span class="section-action" style="font-size:11px;color:var(--text-3)">Ordenadas por data de entrega</span>
+            </div>
+
+            <div class="tasks-list" id="tasks-active-list"></div>
+
+            <!-- Seção de Atividades sem Prazo -->
+            <button class="show-expired-btn" id="btn-toggle-no-due" onclick="toggleNoDueTasks()" style="margin-top:14px">
+              <i data-lucide="help-circle" class="icon"></i>
+              <span id="text-toggle-no-due">Mostrar atividades sem prazo (0)</span>
+            </button>
+
+            <div id="tasks-no-due-section" class="hidden">
+              <div class="expired-section-label">
+                <i data-lucide="calendar-off" class="icon"></i>
+                Atividades sem prazo definido
+              </div>
+              <div class="tasks-list" id="tasks-no-due-list"></div>
+            </div>
+
+            <!-- Seção de Atividades Encerradas -->
+            <button class="show-expired-btn" id="btn-toggle-expired" onclick="toggleExpiredTasks()" style="margin-top:10px">
+              <i data-lucide="archive" class="icon"></i>
+              <span id="text-toggle-expired">Mostrar atividades encerradas (0)</span>
+            </button>
+
+            <div id="tasks-expired-section" class="hidden">
+              <div class="expired-section-label">
+                <i data-lucide="archive" class="icon"></i>
+                Atividades encerradas
+              </div>
+              <div class="tasks-list" id="tasks-expired-list"></div>
+            </div>
+          </section>
+
+          <!-- ── ABA CALENDÁRIO ── -->
+          <section id="tab-timetable" class="hidden">
+            <div class="section-header">
+              <span class="section-title">Calendário de Prazos</span>
+              <span style="font-size:11px;color:var(--text-3)">Clique num dia para ver as entregas</span>
+            </div>
+            <div class="calendar-layout">
+              <div class="calendar-card">
+                <div class="calendar-header">
+                  <span class="calendar-month" id="cal-month-name">—</span>
+                  <div class="cal-legend">
+                    <div class="cal-dot"></div>
+                    com entrega
+                  </div>
+                </div>
+                <div class="cal-weekdays">
+                  <div class="cal-weekday">D</div>
+                  <div class="cal-weekday">S</div>
+                  <div class="cal-weekday">T</div>
+                  <div class="cal-weekday">Q</div>
+                  <div class="cal-weekday">Q</div>
+                  <div class="cal-weekday">S</div>
+                  <div class="cal-weekday">S</div>
+                </div>
+                <div class="cal-days" id="cal-days-grid"></div>
+              </div>
+
+              <div class="events-panel">
+                <div class="events-title" id="cal-panel-title">Prazos de Hoje</div>
+                <div class="events-sub" id="cal-panel-sub">Selecione um dia no calendário para ver os prazos</div>
+                <div id="cal-events-list"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── ABA MENSAGENS / CHAT ── -->
+          <section id="tab-chat" class="hidden">
+            <div class="section-header">
+              <span class="section-title">Mensagens & Conversas</span>
+              <span class="section-action" style="font-size:11px;color:var(--text-3)">Chat oficial do Moodle IFSP</span>
+            </div>
+            <div class="chat-layout">
+              <div class="chat-sidebar">
+                <div class="chat-sidebar-header">
+                  <input class="chat-search-input" id="chat-search" oninput="filterConversations()" placeholder="Buscar conversa por nome…">
+                </div>
+                <div class="chat-conv-list" id="chat-conv-list">
+                  <div class="loading-state" style="padding:24px"><div class="spin"></div><span>Carregando conversas…</span></div>
+                </div>
+              </div>
+              <div class="chat-main" id="chat-main-panel">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-3);padding:32px;text-align:center">
+                  <i data-lucide="message-square" style="width:36px;height:36px;stroke-width:1.5;margin-bottom:12px;opacity:0.4"></i>
+                  <div style="font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:4px">Nenhuma conversa selecionada</div>
+                  <div style="font-size:12px">Selecione uma conversa ao lado para visualizar e enviar mensagens.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- VISÃO DE PÁGINA COMPLETA DA DISCIPLINA -->
+      <div id="course-page-view" style="display:none;flex:1">
+        <div class="page">
+
+          <button class="course-page-back" onclick="backToCoursesView()">
+            <i data-lucide="arrow-left" class="icon"></i>
+            Voltar para Disciplinas
+          </button>
+
+          <div class="course-page-header">
+            <div>
+              <span class="course-page-tag" id="cp-tag">SIGLA</span>
+              <div class="course-page-title" id="cp-title">Nome da Disciplina</div>
+              <div class="course-page-id" id="cp-id">Código</div>
+            </div>
+            <a class="course-page-ext" id="cp-ext-link" href="#" target="_blank">
+              <i data-lucide="external-link" class="icon"></i>
+              Abrir no Moodle
+            </a>
+          </div>
+
+          <div id="cp-sections"></div>
+
+        </div>
+      </div>
+
+      <!-- VISÃO DE PÁGINA COMPLETA DA TAREFA / ATIVIDADE -->
+      <div id="assignment-page-view" style="display:none;flex:1">
+        <div class="page">
+
+          <button class="course-page-back" onclick="backFromAssignmentView()">
+            <i data-lucide="arrow-left" class="icon"></i>
+            <span id="assign-back-label">Voltar</span>
+          </button>
+
+          <div id="assign-page-content">
+            <!-- Renderizado dinamicamente via JS -->
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: MEUS ARQUIVOS PRIVADOS DO MOODLE -->
+  <div id="moodle-files-modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);z-index:9999;align-items:center;justify-content:center;padding:16px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);width:100%;max-width:540px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--text-1)">Meus Arquivos no Moodle</div>
+          <div style="font-size:11px;color:var(--text-3)">Arquivos hospedados em moodle.arq.ifsp.edu.br/user/files.php</div>
+        </div>
+        <button class="topbar-icon-btn" onclick="closeMoodlePrivateFilesModal()">
+          <i data-lucide="x" class="icon"></i>
+        </button>
+      </div>
+      <div id="moodle-private-files-list" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px">
+        <div class="loading-state" style="padding:28px"><div class="spin"></div><span>Carregando seus arquivos do Moodle…</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════ -->
+  <script>
+    const DEFAULT_SERVER = "https://moodle.arq.ifsp.edu.br";
+    const state = {
+      token: localStorage.getItem("moodle_token") || null,
+      serverUrl: localStorage.getItem("moodle_server") || DEFAULT_SERVER,
+      user: null,
+      courses: [],
+      assignments: { active: [], expired: [], noDueDate: [], all: [] },
+      selectedSemester: "20262",
+      showExpired: false,
+      showNoDueDate: false,
+      activeCourseId: null,
+    };
+
+    /* ─── BOOT ─── */
+    window.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      setGreetingDate();
+
+      document.addEventListener("click", e => {
+        if (!e.target.closest(".chat-attach-wrapper")) {
+          closeChatAttachMenu();
+        }
+      });
+
+      if (state.token) initSession(state.token);
+      else showLogin();
+    });
+
+    function setGreetingDate() {
+      const el = document.getElementById("greeting-date");
+      if (!el) return;
+      const opts = { weekday: "long", day: "numeric", month: "long" };
+      el.textContent = new Date().toLocaleDateString("pt-BR", opts);
+    }
+
+    /* ─── LOGIN ─── */
+    function showLogin() {
+      document.getElementById("login-view").style.display = "flex";
+      document.getElementById("dashboard-view").style.display = "none";
+      document.getElementById("dashboard-view").classList.add("hidden");
+      lucide.createIcons();
+    }
+
+    function showDashboard() {
+      document.getElementById("login-view").style.display = "none";
+      const d = document.getElementById("dashboard-view");
+      d.classList.remove("hidden");
+      d.style.display = "flex";
+      lucide.createIcons();
+    }
+
+    function togglePwd() {
+      const inp = document.getElementById("password");
+      const ico = document.getElementById("eye-icon");
+      const isHidden = inp.type === "password";
+      inp.type = isHidden ? "text" : "password";
+      ico.setAttribute("data-lucide", isHidden ? "eye-off" : "eye");
+      lucide.createIcons();
+    }
+
+    async function handleLogin() {
+      const server   = document.getElementById("server-url").value.trim().replace(/\/$/, "");
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const errDiv   = document.getElementById("login-error");
+      const btn      = document.getElementById("btn-login");
+      const btnTxt   = document.getElementById("btn-login-text");
+
+      errDiv.classList.add("hidden");
+      if (!username || !password) {
+        errDiv.textContent = "Informe o prontuário e a senha.";
+        errDiv.classList.remove("hidden");
+        return;
+      }
+
+      btn.disabled = true;
+      btnTxt.textContent = "Conectando…";
+
+      try {
+        const body = new URLSearchParams({ username, password, service: "moodle_mobile_app" });
+        const res  = await fetch(`${server}/login/token.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString()
+        });
+        const data = await res.json();
+
+        if (data.token) {
+          state.serverUrl = server;
+          localStorage.setItem("moodle_server", server);
+          initSession(data.token);
+        } else {
+          throw new Error(data.error || "Credenciais inválidas.");
+        }
+      } catch (e) {
+        errDiv.textContent = e.message;
+        errDiv.classList.remove("hidden");
+      } finally {
+        btn.disabled = false;
+        btnTxt.textContent = "Entrar no Portal";
+      }
+    }
+
+    /* ─── API WRAPPER ─── */
+    async function callWs(wsfunction, params = {}) {
+      const body = new URLSearchParams({
+        wstoken: state.token,
+        wsfunction,
+        moodlewsrestformat: "json",
+        ...params
+      });
+      const res = await fetch(`${state.serverUrl}/webservice/rest/server.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString()
+      });
+      return await res.json();
+    }
+
+    /* ─── SESSION INIT ─── */
+    async function initSession(token) {
+      state.token = token;
+      localStorage.setItem("moodle_token", token);
+      showDashboard();
+
+      try {
+        const info = await callWs("core_webservice_get_site_info");
+        if (info.exception || info.errorcode) {
+          throw new Error(info.message || "Sessão expirada. Faça login novamente.");
+        }
+        state.user = info;
+        renderUser(info);
+      } catch (e) {
+        console.error("Erro na autenticação:", e);
+        alert(e.message || "Erro ao autenticar. Faça login novamente.");
+        handleLogout();
+        return;
+      }
+
+      try {
+        await loadCourses(state.user.userid);
+      } catch (e) {
+        console.error("Erro ao carregar disciplinas:", e);
+      }
+
+      try {
+        await loadAssignments();
+      } catch (e) {
+        console.error("Erro ao carregar tarefas:", e);
+      }
+
+      try {
+        await updateChatUnreadBadge();
+      } catch (e) {
+        console.warn("Erro ao buscar contagem de mensagens:", e);
+      }
+    }
+
+    function renderUser(u) {
+      const full  = u.fullname || u.firstname || "Aluno";
+      const parts = full.split(" ");
+      const short = parts.length >= 2 ? `${parts[0]} ${parts[1]}` : full;
+
+      document.getElementById("greeting-name").textContent = `Olá, ${short}`;
+      document.getElementById("side-name").textContent = full;
+      document.getElementById("side-sub").textContent = u.username?.toUpperCase() || "";
+
+      if (u.userpictureurl) {
+        document.getElementById("side-avatar").src = u.userpictureurl;
+        document.getElementById("top-avatar").src  = u.userpictureurl;
+      }
+    }
+
+    /* ─── HELPERS ─── */
+    function getAuthUrl(url) {
+      if (!url) return "";
+      const sep = url.includes("?") ? "&" : "?";
+      return `${url}${sep}token=${state.token}`;
+    }
+
+    function getCourseSemester(c) {
+      const raw = `${c.idnumber || ""} ${c.shortname || ""} ${c.fullname || ""}`;
+      const m   = raw.match(/20\d{2}[12]/);
+      return m ? m[0] : "other";
+    }
+
+    function cleanTitle(fullname) {
+      return fullname.replace(/\[.*?\]/g, "").replace(/^(ARQ[A-Z0-9]+|TCN\.[A-Z0-9.]+)\s*-\s*/i, "").trim() || fullname;
+    }
+
+    function getGDriveId(url) {
+      if (!url) return null;
+      const m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      return m ? m[1] : null;
+    }
+
+    /* ─── COURSES ─── */
+    async function loadCourses(userid) {
+      document.getElementById("courses-grid").innerHTML = `<div class="loading-state empty-state"><div class="spin"></div><span>Carregando disciplinas…</span></div>`;
+      lucide.createIcons();
+
+      const list = await callWs("core_enrol_get_users_courses", { userid });
+      state.courses = list || [];
+
+      const n2 = state.courses.filter(c => getCourseSemester(c) === "20262").length;
+      const n1 = state.courses.filter(c => getCourseSemester(c) === "20261").length;
+
+      const sc2 = document.getElementById("sem-count-20262");
+      const sc1 = document.getElementById("sem-count-20261");
+      const sbc = document.getElementById("side-badge-courses");
+      const sba = document.getElementById("sem-btn-all");
+
+      if (sc2) sc2.textContent = n2;
+      if (sc1) sc1.textContent = n1;
+      if (sbc) sbc.textContent = n2;
+      if (sba) sba.textContent = `Todas (${state.courses.length})`;
+
+      applyFilters();
+    }
+
+    function setSemesterFilter(sem) {
+      state.selectedSemester = sem;
+      ["20262","20261","all"].forEach(k => {
+        const btn = document.getElementById(`sem-btn-${k}`);
+        if (!btn) return;
+        if (k === sem) { btn.classList.add("active"); }
+        else           { btn.classList.remove("active"); }
+      });
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const q = (document.getElementById("quick-search")?.value || "").toLowerCase();
+      let list = state.courses;
+      if (state.selectedSemester !== "all") list = list.filter(c => getCourseSemester(c) === state.selectedSemester);
+      if (q) list = list.filter(c => c.fullname.toLowerCase().includes(q) || c.shortname.toLowerCase().includes(q));
+      renderCourses(list);
+    }
+
+    function renderCourses(courses) {
+      const grid = document.getElementById("courses-grid");
+      if (!courses || !courses.length) {
+        grid.innerHTML = `<div class="empty-state">Nenhuma disciplina encontrada.</div>`;
+        return;
+      }
+
+      grid.innerHTML = courses.map(c => {
+        const cover = (c.overviewfiles?.[0]?.fileurl)
+          ? getAuthUrl(c.overviewfiles[0].fileurl)
+          : `https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&auto=format&fit=crop&q=60`;
+
+        const title = cleanTitle(c.fullname);
+        const sem   = getCourseSemester(c);
+        const semLbl = sem === "20262" ? "2026/2" : (sem === "20261" ? "2026/1" : "—");
+
+        return `
+          <div class="course-card" onclick="openCoursePage(${c.id})">
+            <div class="course-cover">
+              <img src="${cover}" alt="${title}" loading="lazy"
+                   onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&auto=format&fit=crop&q=60'">
+              <div class="course-cover-overlay"></div>
+            </div>
+            <div class="course-body">
+              <span class="course-tag">${c.shortname.slice(0,16)} · ${semLbl}</span>
+              <div class="course-name">${title}</div>
+              <div class="course-meta">
+                <span class="course-students">
+                  <i data-lucide="users" class="icon"></i>
+                  ${c.enrolledusercount || 0} alunos
+                </span>
+                <div class="course-arrow">
+                  <i data-lucide="arrow-right" class="icon" style="width:10px;height:10px"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    /* ─── ASSIGNMENTS ─── */
+    async function loadAssignments() {
+      try {
+        const res  = await callWs("mod_assign_get_assignments");
+        const all  = [];
+        const now  = Math.floor(Date.now() / 1000);
+
+        (res.courses || []).forEach(c => {
+          (c.assignments || []).forEach(a => all.push({ ...a, courseName: c.shortname || c.fullname }));
+        });
+
+        // Separação em 3 grupos: Ativas com prazo, Sem prazo definido, e Encerradas
+        const active    = all.filter(a => a.duedate && a.duedate >= now).sort((a,b) => a.duedate - b.duedate);
+        const noDueDate = all.filter(a => !a.duedate || a.duedate === 0).sort((a,b) => a.name.localeCompare(b.name));
+        const expired   = all.filter(a => a.duedate && a.duedate < now).sort((a,b) => b.duedate - a.duedate);
+
+        state.assignments = { active, expired, noDueDate, all };
+
+        const sbt = document.getElementById("side-badge-tasks");
+        const tte = document.getElementById("text-toggle-expired");
+        const tnd = document.getElementById("text-toggle-no-due");
+        if (sbt) sbt.textContent = active.length;
+        if (tte) tte.textContent = `Mostrar atividades encerradas (${expired.length})`;
+        if (tnd) tnd.textContent = `Mostrar atividades sem prazo (${noDueDate.length})`;
+
+        renderTasks();
+        buildCalendar();
+      } catch (e) {
+        console.warn("Tarefas indisponíveis:", e);
+      }
+    }
+
+    function toggleExpiredTasks() {
+      state.showExpired = !state.showExpired;
+      const sec  = document.getElementById("tasks-expired-section");
+      const btn  = document.getElementById("text-toggle-expired");
+      const cnt  = (state.assignments.expired || []).length;
+      sec.classList.toggle("hidden", !state.showExpired);
+      btn.textContent = state.showExpired
+        ? `Ocultar atividades encerradas (${cnt})`
+        : `Mostrar atividades encerradas (${cnt})`;
+    }
+
+    function toggleNoDueTasks() {
+      state.showNoDueDate = !state.showNoDueDate;
+      const sec  = document.getElementById("tasks-no-due-section");
+      const btn  = document.getElementById("text-toggle-no-due");
+      const cnt  = (state.assignments.noDueDate || []).length;
+      sec.classList.toggle("hidden", !state.showNoDueDate);
+      btn.textContent = state.showNoDueDate
+        ? `Ocultar atividades sem prazo (${cnt})`
+        : `Mostrar atividades sem prazo (${cnt})`;
+    }
+
+    function renderTasks() {
+      renderTaskList("tasks-active-list", state.assignments.active, "active");
+      renderTaskList("tasks-no-due-list", state.assignments.noDueDate, "nodue");
+      renderTaskList("tasks-expired-list", state.assignments.expired, "expired");
+      lucide.createIcons();
+    }
+
+    function renderTaskList(id, list, type) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (!list.length) {
+        if (type === "active") {
+          el.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:12px">Nenhuma tarefa pendente com prazo. 🎉</div>`;
+        } else if (type === "nodue") {
+          el.innerHTML = `<div style="padding:16px;text-align:center;color:var(--text-3);font-size:12px">Nenhuma tarefa sem prazo encontrada.</div>`;
+        } else {
+          el.innerHTML = "";
+        }
+        return;
+      }
+
+      const now = Math.floor(Date.now() / 1000);
+
+      el.innerHTML = list.map(a => {
+        const due  = a.duedate ? new Date(a.duedate * 1000) : null;
+        let fmt    = "Sem prazo determinado";
+        let iconClass  = "active-task";
+        let iconName   = "clipboard-list";
+        let badgeClass = "badge-accent";
+        let badgeText  = "Sem prazo";
+        let btnText    = "Ver / Entregar";
+
+        if (type === "nodue") {
+          iconClass  = "active-task";
+          iconName   = "calendar-off";
+          badgeClass = "badge-muted";
+          badgeText  = "Sem prazo";
+          btnText    = "Ver / Entregar";
+        } else if (type === "expired") {
+          fmt        = due ? due.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Encerrada";
+          iconClass  = "expired-task";
+          iconName   = "archive";
+          badgeClass = "badge-muted";
+          badgeText  = "Encerrada";
+          btnText    = "Ver Detalhes";
+        } else {
+          // Ativa com prazo
+          fmt = due ? due.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Hoje";
+          const diff = a.duedate - now;
+          const diffD = Math.floor(diff / 86400);
+          const diffH = Math.floor(diff / 3600);
+
+          if (diff < 86400) {
+            iconClass  = "urgent-task";
+            iconName   = "alert-circle";
+            badgeClass = "badge-red";
+            badgeText  = due ? `Vence às ${due.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}` : "Hoje";
+          } else if (diffD <= 3) {
+            iconClass  = "soon-task";
+            iconName   = "clock";
+            badgeClass = "badge-amber";
+            badgeText  = `Em ${diffD} dias`;
+          } else {
+            iconClass  = "active-task";
+            iconName   = "clipboard-list";
+            badgeClass = "badge-accent";
+            badgeText  = `Em ${diffD} dias`;
+          }
+        }
+
+        return `
+          <div class="task-item${type === "expired" ? " expired" : ""}">
+            <div class="task-left" style="cursor:pointer" onclick="openAssignmentPage(${a.cmid}, ${a.id}, '${escapeJs(a.courseName)}')">
+              <div class="task-icon-wrap ${iconClass}">
+                <i data-lucide="${iconName}" class="icon"></i>
+              </div>
+              <div class="task-info">
+                <div class="task-course">${a.courseName}</div>
+                <div class="task-name">${a.name}</div>
+                <div class="task-due">
+                  <i data-lucide="clock" class="icon"></i>
+                  ${fmt}
+                </div>
+              </div>
+            </div>
+            <span class="task-badge ${badgeClass}">${badgeText}</span>
+            <button class="task-link" style="cursor:pointer" onclick="openAssignmentPage(${a.cmid}, ${a.id}, '${escapeJs(a.courseName)}')">
+              <i data-lucide="file-text" class="icon"></i>
+              ${btnText}
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    /* ─── CALENDÁRIO ─── */
+    function buildCalendar() {
+      const now   = new Date();
+      const year  = now.getFullYear();
+      const month = now.getMonth();
+      const today = now.getDate();
+      const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+      document.getElementById("cal-month-name").textContent = `${months[month]} ${year}`;
+
+      // Agrupa prazos por dia do mês atual
+      const byDay = {};
+      (state.assignments.all || []).forEach(a => {
+        if (!a.duedate) return;
+        const d = new Date(a.duedate * 1000);
+        if (d.getFullYear() === year && d.getMonth() === month) {
+          const day = d.getDate();
+          if (!byDay[day]) byDay[day] = [];
+          byDay[day].push(a);
+        }
+      });
+
+      const firstDow = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const grid = document.getElementById("cal-days-grid");
+
+      let html = "";
+      for (let i = 0; i < firstDow; i++) html += `<div></div>`;
+
+      for (let d = 1; d <= totalDays; d++) {
+        const isToday    = d === today;
+        const hasEvents  = !!byDay[d];
+        let cls = "cal-day";
+        if (isToday)   cls += " today";
+        if (hasEvents) cls += " has-event";
+
+        html += `
+          <div class="${cls}" onclick="selectCalDay(${d},${year},${month})">
+            <span>${d}</span>
+            ${hasEvents ? '<div class="event-dot"></div>' : ''}
+          </div>
+        `;
+      }
+
+      grid.innerHTML = html;
+      renderCalEvents(byDay[today] || []);
+      lucide.createIcons();
+    }
+
+    function selectCalDay(day, year, month) {
+      const all = state.assignments.all || [];
+      const byDay = all.filter(a => {
+        if (!a.duedate) return false;
+        const d = new Date(a.duedate * 1000);
+        return d.getFullYear() === year && d.getMonth() === month && d.getDate() === day;
+      });
+
+      // Atualiza célula selecionada
+      document.querySelectorAll(".cal-day").forEach(el => el.classList.remove("selected"));
+      const allDays = document.querySelectorAll(".cal-day");
+      // encontra o dia corretamente
+      const firstDow = new Date(year, month, 1).getDay();
+      const idx = firstDow + day - 1;
+      if (allDays[idx]) allDays[idx].classList.add("selected");
+
+      const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+      document.getElementById("cal-panel-title").textContent = `Prazos — ${day} de ${months[month]}`;
+      renderCalEvents(byDay);
+    }
+
+    function renderCalEvents(list) {
+      const container = document.getElementById("cal-events-list");
+      const sub       = document.getElementById("cal-panel-sub");
+      sub.textContent = `${list.length} entrega(s) neste dia`;
+
+      if (!list.length) {
+        container.innerHTML = `<div class="no-events"><i data-lucide="check-circle" style="width:24px;height:24px;margin-bottom:6px;display:block;margin-left:auto;margin-right:auto;color:var(--accent)"></i>Nenhuma entrega neste dia.</div>`;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = list.map(a => {
+        const due = a.duedate ? new Date(a.duedate * 1000) : null;
+        const fmt = due ? due.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}) : "";
+        return `
+          <div class="event-item">
+            <div class="event-dot-bar"></div>
+            <div style="flex:1;min-width:0;cursor:pointer" onclick="openAssignmentPage(${a.cmid}, ${a.id}, '${escapeJs(a.courseName)}')">
+              <div class="event-course">${a.courseName}</div>
+              <div class="event-name">${a.name}</div>
+              ${fmt ? `<div class="event-time">Vencimento às ${fmt}</div>` : ""}
+            </div>
+            <button class="task-link" onclick="openAssignmentPage(${a.cmid}, ${a.id}, '${escapeJs(a.courseName)}')" style="flex-shrink:0;cursor:pointer">
+              <i data-lucide="file-text" class="icon"></i>
+              Detalhes
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    /* ─── COURSE PAGE ─── */
+    async function openCoursePage(courseId) {
+      const course = state.courses.find(c => c.id === courseId);
+      if (!course) return;
+
+      state.activeCourseId = courseId;
+      document.getElementById("main-tabs-view").style.display = "none";
+      const cp = document.getElementById("course-page-view");
+      cp.classList.remove("hidden");
+      cp.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      document.getElementById("cp-tag").textContent = course.shortname;
+      document.getElementById("cp-title").textContent = cleanTitle(course.fullname);
+      document.getElementById("cp-id").textContent = course.idnumber || `ID: ${course.id}`;
+      document.getElementById("cp-ext-link").href = `${state.serverUrl}/course/view.php?id=${course.id}`;
+
+      const container = document.getElementById("cp-sections");
+      container.innerHTML = `<div class="loading-state"><div class="spin"></div><span>Carregando conteúdo da disciplina…</span></div>`;
+      lucide.createIcons();
+
+      try {
+        const sections = await callWs("core_course_get_contents", { courseid: courseId });
+        renderCourseSections(sections);
+      } catch (e) {
+        container.innerHTML = `<div class="loading-state" style="color:var(--accent-2)">Erro ao carregar conteúdo.</div>`;
+      }
+    }
+
+    function backToCoursesView() {
+      const cp = document.getElementById("course-page-view");
+      cp.classList.add("hidden");
+      cp.style.display = "none";
+      const mt = document.getElementById("main-tabs-view");
+      mt.classList.remove("hidden");
+      mt.style.display = "block";
+      state.activeCourseId = null;
+      lucide.createIcons();
+    }
+
+    function renderCourseSections(sections) {
+      const container = document.getElementById("cp-sections");
+      const valid = (sections || []).filter(s =>
+        (s.modules && s.modules.length) || (s.summary && s.summary.trim())
+      );
+
+      if (!valid.length) {
+        container.innerHTML = `<div class="loading-state">Nenhum tópico encontrado.</div>`;
+        return;
+      }
+
+      container.innerHTML = valid.map(sec => {
+        const title = sec.name.trim() || "Sem título";
+        const mods  = sec.modules || [];
+        const cnt   = mods.filter(m => m.modname !== "label").length;
+
+        const modsHtml = mods.map(m => {
+          /* ── LABEL (bloco de texto) ── */
+          if (m.modname === "label") {
+            return `<div class="label-block">${m.description || m.name}</div>`;
+          }
+
+          /* ── PASTA COM MÚLTIPLOS ARQUIVOS ── */
+          if (m.modname === "folder" && m.contents?.length) {
+            const filesHtml = m.contents.map(f => `
+              <a class="file-chip" href="${getAuthUrl(f.fileurl)}" target="_blank" download>
+                <i data-lucide="file" class="icon"></i>${f.filename}
+              </a>
+            `).join("");
+
+            return `
+              <div class="module-item" style="flex-direction:column;align-items:flex-start;gap:0;padding:0">
+                <div style="display:flex;align-items:center;gap:10px;padding:11px 18px;width:100%">
+                  <div class="module-icon mi-folder"><i data-lucide="folder" class="icon"></i></div>
+                  <div class="module-info">
+                    <div class="module-type">Pasta · ${m.contents.length} arquivos</div>
+                    <div class="module-name">${m.name}</div>
+                  </div>
+                </div>
+                <div class="folder-files">${filesHtml}</div>
+              </div>
+            `;
+          }
+
+          /* ── RECURSO DIRETO (PDF) ── */
+          if (m.modname === "resource" && m.contents?.[0]) {
+            const url = getAuthUrl(m.contents[0].fileurl);
+            return `
+              <div class="module-item">
+                <div class="module-left">
+                  <div class="module-icon mi-pdf"><i data-lucide="file-text" class="icon"></i></div>
+                  <div class="module-info">
+                    <div class="module-type">PDF / Documento</div>
+                    <div class="module-name">${m.name}</div>
+                  </div>
+                </div>
+                <div class="module-actions">
+                  <a class="mod-btn mod-btn-primary" href="${url}" target="_blank" download>
+                    <i data-lucide="download" class="icon"></i> Baixar
+                  </a>
+                  <a class="mod-btn" href="${url}" target="_blank">
+                    <i data-lucide="eye" class="icon"></i>
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+
+          /* ── LINK EXTERNO (Google Drive ou outros) ── */
+          if (m.modname === "url") {
+            const rawUrl  = (m.contents?.[0])?.fileurl || m.url;
+            const driveId = getGDriveId(rawUrl);
+
+            if (driveId) {
+              const dlUrl   = `https://drive.google.com/uc?export=download&id=${driveId}`;
+              const viewUrl = rawUrl;
+              return `
+                <div class="module-item">
+                  <div class="module-left">
+                    <div class="module-icon mi-drive"><i data-lucide="hard-drive" class="icon"></i></div>
+                    <div class="module-info">
+                      <div class="module-type">Google Drive</div>
+                      <div class="module-name">${m.name}</div>
+                    </div>
+                  </div>
+                  <div class="module-actions">
+                    <a class="mod-btn mod-btn-primary" href="${dlUrl}" target="_blank">
+                      <i data-lucide="download" class="icon"></i> Baixar
+                    </a>
+                    <a class="mod-btn" href="${viewUrl}" target="_blank">
+                      <i data-lucide="external-link" class="icon"></i>
+                    </a>
+                  </div>
+                </div>
+              `;
+            }
+
+            return `
+              <div class="module-item">
+                <div class="module-left">
+                  <div class="module-icon mi-link"><i data-lucide="link" class="icon"></i></div>
+                  <div class="module-info">
+                    <div class="module-type">Link Externo</div>
+                    <div class="module-name">${m.name}</div>
+                  </div>
+                </div>
+                <div class="module-actions">
+                  <a class="mod-btn" href="${rawUrl}" target="_blank">
+                    <i data-lucide="external-link" class="icon"></i> Acessar
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+
+          /* ── TAREFA / WORK ── */
+          if (m.modname === "assign") {
+            const courseTitle = document.getElementById("cp-title") ? document.getElementById("cp-title").textContent : "";
+            return `
+              <div class="module-item">
+                <div class="module-left" style="cursor:pointer" onclick="openAssignmentPage(${m.id}, ${m.instance}, '${escapeJs(courseTitle)}')">
+                  <div class="module-icon mi-assign"><i data-lucide="clipboard-check" class="icon"></i></div>
+                  <div class="module-info">
+                    <div class="module-type">Tarefa Avaliativa</div>
+                    <div class="module-name">${m.name}</div>
+                  </div>
+                </div>
+                <div class="module-actions">
+                  <button class="mod-btn mod-btn-primary" onclick="openAssignmentPage(${m.id}, ${m.instance}, '${escapeJs(courseTitle)}')">
+                    <i data-lucide="file-text" class="icon"></i> Detalhes & Envio
+                  </button>
+                  <a class="mod-btn" href="${state.serverUrl}/mod/assign/view.php?id=${m.id}" target="_blank" title="Abrir no Moodle Clássico">
+                    <i data-lucide="external-link" class="icon"></i>
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+
+          /* ── GENÉRICO ── */
+          return `
+            <div class="module-item">
+              <div class="module-left">
+                <div class="module-icon mi-label"><i data-lucide="file" class="icon"></i></div>
+                <div class="module-info">
+                  <div class="module-type">${m.modplural || m.modname}</div>
+                  <div class="module-name">${m.name}</div>
+                </div>
+              </div>
+              <div class="module-actions">
+                <a class="mod-btn" href="${m.url || `${state.serverUrl}/mod/${m.modname}/view.php?id=${m.id}`}" target="_blank">
+                  <i data-lucide="external-link" class="icon"></i> Abrir
+                </a>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <div class="course-section">
+            <div class="course-section-header">
+              <div class="section-dot"></div>
+              <span class="course-section-name">${title}</span>
+              ${cnt > 0 ? `<span class="course-module-count">${cnt} item(s)</span>` : ""}
+            </div>
+            <div class="module-list">${modsHtml}</div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    /* ─── PÁGINA DE DETALHES & ENVIO DA ATIVIDADE ─── */
+    function escapeJs(str) {
+      return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    async function openAssignmentPage(cmid, assignId, courseName) {
+      state.previousView = state.activeCourseId ? 'course' : 'tabs';
+
+      document.getElementById("main-tabs-view").style.display = "none";
+      document.getElementById("course-page-view").style.display = "none";
+      const apv = document.getElementById("assignment-page-view");
+      apv.classList.remove("hidden");
+      apv.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      const backLabel = document.getElementById("assign-back-label");
+      if (backLabel) {
+        backLabel.textContent = state.previousView === 'course' ? "Voltar para Disciplina" : "Voltar para Tarefas";
+      }
+
+      const container = document.getElementById("assign-page-content");
+      container.innerHTML = `
+        <div class="loading-state">
+          <div class="spin"></div>
+          <span>Buscando enunciado, orientações do professor e status de envio…</span>
+        </div>
+      `;
+      lucide.createIcons();
+
+      try {
+        let assignInfo = (state.assignments.all || []).find(a => a.id == assignId || a.cmid == cmid);
+
+        if (!assignInfo || !assignInfo.intro) {
+          try {
+            const cmData = await callWs("core_course_get_course_module", { cmid });
+            const courseId = cmData?.cm?.course;
+            if (courseId) {
+              const assignsRes = await callWs("mod_assign_get_assignments", { "courseids[0]": courseId });
+              const found = assignsRes?.courses?.[0]?.assignments?.find(a => a.id == assignId || a.cmid == cmid);
+              if (found) assignInfo = found;
+            }
+          } catch(e) { console.warn(e); }
+        }
+
+        let subStatus = null;
+        try {
+          subStatus = await callWs("mod_assign_get_submission_status", { assignid: assignId });
+        } catch(e) { console.warn(e); }
+
+        renderAssignmentDetailPage(cmid, assignId, courseName, assignInfo, subStatus);
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="loading-state" style="color:var(--accent-2)">Erro ao carregar detalhes da tarefa.</div>`;
+      }
+    }
+
+    function renderAssignmentDetailPage(cmid, assignId, courseName, assignInfo, subStatus) {
+      const container = document.getElementById("assign-page-content");
+      const title = assignInfo?.name || "Atividade";
+      const cName = courseName || assignInfo?.courseName || "Disciplina";
+
+      const now = Math.floor(Date.now() / 1000);
+      const due = assignInfo?.duedate ? new Date(assignInfo.duedate * 1000) : null;
+      const isExpired = assignInfo?.duedate && assignInfo.duedate < now;
+      const dueFormatted = due 
+        ? due.toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        : "Sem prazo especificado";
+
+      let timeLeftText = "Sem prazo determinado";
+      if (due) {
+        const diff = assignInfo.duedate - now;
+        if (diff < 0) {
+          const agoDays = Math.floor(Math.abs(diff) / 86400);
+          timeLeftText = `Prazo encerrado há ${agoDays} dia(s)`;
+        } else {
+          const d = Math.floor(diff / 86400);
+          const h = Math.floor((diff % 86400) / 3600);
+          timeLeftText = `${d} dia(s) e ${h} hora(s) restantes`;
+        }
+      }
+
+      // Status do envio atual do aluno
+      const submission = subStatus?.lastattempt?.submission;
+      const subStatusRaw = submission?.status; // 'submitted', 'draft', 'new'
+      let subStatusLabel = "Nenhum envio realizado";
+      let subBadgeStyle = "background:var(--surface-2);color:var(--text-3);border:1px solid var(--border)";
+
+      if (subStatusRaw === 'submitted') {
+        subStatusLabel = "Enviado para avaliação";
+        subBadgeStyle = "background:var(--accent-bg);color:var(--accent);font-weight:600";
+      } else if (subStatusRaw === 'draft') {
+        subStatusLabel = "Rascunho (não finalizado)";
+        subBadgeStyle = "background:var(--amber-bg);color:var(--amber);font-weight:600";
+      } else if (isExpired) {
+        subStatusLabel = "Não enviado (vencido)";
+        subBadgeStyle = "background:var(--accent-2-bg);color:var(--accent-2);font-weight:600";
+      }
+
+      // Arquivos já enviados pelo aluno
+      const submittedFiles = [];
+      (submission?.plugins || []).forEach(p => {
+        if (p.type === 'file') {
+          (p.fileareas || []).forEach(fa => {
+            (fa.files || []).forEach(f => submittedFiles.push(f));
+          });
+        }
+      });
+
+      // Extrai limites e regras da tarefa do Moodle
+      let maxSizeBytes = 10485760; // 10 MB padrão
+      let maxFiles = 20;
+      let allowedTypes = "Qualquer tipo de arquivo (ex: .zip, .pdf, .rar, código fonte)";
+
+      (assignInfo?.configs || []).forEach(cfg => {
+        if (cfg.name === 'maxsubmissionsizebytes' && cfg.value) {
+          maxSizeBytes = parseInt(cfg.value, 10);
+        } else if (cfg.name === 'maxfilesubmissions' && cfg.value) {
+          maxFiles = parseInt(cfg.value, 10);
+        } else if (cfg.name === 'filetypeslist' && cfg.value && cfg.value.trim()) {
+          allowedTypes = cfg.value;
+        }
+      });
+      const maxSizeMB = Math.round(maxSizeBytes / (1024 * 1024));
+
+      // Anexos do professor (ex: PDF com enunciado ou modelo)
+      const teacherFiles = assignInfo?.introattachments || subStatus?.assignmentdata?.attachments?.intro || [];
+
+      const teacherFilesHtml = teacherFiles.length ? `
+        <div style="margin-top:16px">
+          <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">
+            Arquivos e Instruções do Professor
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            ${teacherFiles.map(f => `
+              <a href="${getAuthUrl(f.fileurl)}" target="_blank" download class="file-chip" style="padding:6px 12px;font-size:12px;background:var(--surface)">
+                <i data-lucide="file-down" class="icon" style="color:var(--accent)"></i>
+                <span>${f.filename}</span>
+                <span style="font-size:10px;color:var(--text-3)">(${Math.round((f.filesize||0)/1024)} KB)</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      const submittedFilesHtml = submittedFiles.length ? `
+        <div style="margin-top:14px;padding:12px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--radius-sm)">
+          <div style="font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:6px">Arquivos enviados anteriormente:</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${submittedFiles.map(f => `
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px">
+                <span style="display:flex;align-items:center;gap:6px"><i data-lucide="file-check" class="icon" style="color:var(--accent)"></i>${f.filename}</span>
+                <a href="${getAuthUrl(f.fileurl)}" target="_blank" download class="mod-btn" style="height:24px;font-size:10px">Baixar</a>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <!-- HEADER DA TAREFA -->
+        <div class="assign-card">
+          <div class="assign-header">
+            <div>
+              <span class="course-page-tag">${cName}</span>
+              <h2 class="assign-title">${title}</h2>
+            </div>
+            <a class="course-page-ext" href="${state.serverUrl}/mod/assign/view.php?id=${cmid}" target="_blank" title="Abrir página no Moodle clássico">
+              <i data-lucide="external-link" class="icon"></i>
+              Moodle Oficial
+            </a>
+          </div>
+
+          <!-- GRID DE METADADOS -->
+          <div class="assign-meta-grid">
+            <div class="assign-meta-item">
+              <span class="assign-meta-label">Status do Envio</span>
+              <span class="assign-meta-val" style="padding:2px 8px;border-radius:4px;display:inline-block;width:fit-content;${subBadgeStyle}">${subStatusLabel}</span>
+            </div>
+            <div class="assign-meta-item">
+              <span class="assign-meta-label">Data de Entrega</span>
+              <span class="assign-meta-val">${dueFormatted}</span>
+            </div>
+            <div class="assign-meta-item">
+              <span class="assign-meta-label">Tempo Restante</span>
+              <span class="assign-meta-val" style="${isExpired ? 'color:var(--accent-2)' : 'color:var(--accent)'}">${timeLeftText}</span>
+            </div>
+          </div>
+
+          <!-- ENUNCIADO DO PROFESSOR -->
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">
+              Orientações do Professor
+            </div>
+            <div class="assign-intro-box">
+              ${assignInfo?.intro || '<p style="color:var(--text-3)">Nenhuma orientação por escrito fornecida pelo professor.</p>'}
+            </div>
+            ${teacherFilesHtml}
+          </div>
+        </div>
+
+        <!-- ÁREA DE ENVIO DO ALUNO -->
+        <div class="assign-card">
+          <div style="font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:12px;display:flex;align-items:center;gap:6px">
+            <i data-lucide="upload" class="icon" style="color:var(--accent)"></i>
+            Envio da Atividade
+          </div>
+
+          ${submittedFilesHtml}
+
+          <!-- SELETOR DE ARQUIVO -->
+          <div style="margin-top:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <label class="form-label" style="margin-bottom:0">Arquivo do Trabalho</label>
+              <span style="font-size:11px;color:var(--text-3)">Limite: <strong>${maxSizeMB} MB</strong> · Até <strong>${maxFiles}</strong> arquivos</span>
+            </div>
+            <div class="assign-upload-zone" onclick="document.getElementById('assign-file-input').click()">
+              <input type="file" id="assign-file-input" onchange="updateFileSelection(this)">
+              <i data-lucide="upload-cloud" style="width:28px;height:28px;color:var(--accent);margin:0 auto 8px;display:block"></i>
+              <div id="file-selection-text" style="font-size:13px;font-weight:600;color:var(--text-1)">
+                Clique aqui para selecionar seu arquivo ou arraste para cá
+              </div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:4px">
+                Formatos aceitos: ${allowedTypes}
+              </div>
+            </div>
+          </div>
+
+          <!-- CAMPO DE LINK / TEXTO ONLINE -->
+          <div style="margin-top:14px">
+            <label class="form-label">Endereço do Repositório ou Observações (opcional)</label>
+            <input type="text" id="assign-repo-input" class="form-input" style="padding-left:12px" placeholder="Ex: https://github.com/seu-usuario/projeto-guia-turismo">
+          </div>
+
+          <!-- MENSAGEM DE FEEDBACK -->
+          <div id="assign-submit-msg" class="hidden" style="margin-top:14px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border);font-size:12px"></div>
+
+          <!-- BOTÕES DE ENVIO -->
+          <div style="display:flex;gap:10px;margin-top:20px">
+            <button class="btn-primary" id="btn-submit-assignment" onclick="handleAssignmentSubmit(${assignId}, ${cmid})" style="margin-top:0;flex:1">
+              <i data-lucide="send" style="width:14px;height:14px"></i>
+              Enviar Trabalho para o Moodle
+            </button>
+            <a class="btn-secondary" href="${state.serverUrl}/mod/assign/view.php?id=${cmid}" target="_blank" style="width:auto;padding:0 16px">
+              <i data-lucide="external-link" class="icon"></i>
+              Página Clássica
+            </a>
+          </div>
+        </div>
+      `;
+
+      lucide.createIcons();
+    }
+
+    function updateFileSelection(input) {
+      const label = document.getElementById("file-selection-text");
+      if (input.files && input.files[0]) {
+        const f = input.files[0];
+        label.innerHTML = `Arquivo selecionado: <strong style="color:var(--accent)">${f.name}</strong> (${Math.round(f.size/1024)} KB)`;
+      } else {
+        label.textContent = "Clique aqui para selecionar seu arquivo ou arraste para cá";
+      }
+    }
+
+    async function handleAssignmentSubmit(assignId, cmid) {
+      const fileInput = document.getElementById("assign-file-input");
+      const repoInput = document.getElementById("assign-repo-input");
+      const feedbackEl = document.getElementById("assign-submit-msg");
+      const btn = document.getElementById("btn-submit-assignment");
+
+      const hasFile = fileInput?.files?.length > 0;
+      const hasText = repoInput?.value?.trim();
+
+      if (!hasFile && !hasText) {
+        alert("Por favor, selecione um arquivo ou informe o link do repositório antes de enviar.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<div class="spin" style="width:14px;height:14px;border-width:2px;display:inline-block"></div> Enviando arquivo para o IFSP...`;
+
+      try {
+        let itemid = 0;
+
+        if (hasFile) {
+          const file = fileInput.files[0];
+          const draftRes = await callWs("core_files_get_unused_draft_itemid");
+          itemid = draftRes.itemid;
+
+          const formData = new FormData();
+          formData.append("token", state.token);
+          formData.append("itemid", itemid);
+          formData.append("filearea", "draft");
+          formData.append("filepath", "/");
+          formData.append("file", file);
+
+          const upRes = await fetch(`${state.serverUrl}/webservice/upload.php`, {
+            method: "POST",
+            body: formData
+          });
+          const upData = await upRes.json();
+          if (upData && upData.error) throw new Error(upData.error);
+        }
+
+        const saveParams = {
+          assignmentid: assignId
+        };
+
+        if (itemid) {
+          saveParams["plugindata[files_filemanager]"] = itemid;
+        }
+
+        if (hasText) {
+          saveParams["plugindata[onlinetext_editor][text]"] = repoInput.value.trim();
+          saveParams["plugindata[onlinetext_editor][format]"] = 1;
+          saveParams["plugindata[onlinetext_editor][itemid]"] = itemid || 0;
+        }
+
+        await callWs("mod_assign_save_submission", saveParams);
+
+        feedbackEl.innerHTML = `<span style="color:var(--accent);font-weight:600">✓ Atividade enviada com sucesso para o professor!</span>`;
+        feedbackEl.classList.remove("hidden");
+
+        // Recarrega os dados em 1 segundo
+        setTimeout(() => {
+          openAssignmentPage(cmid, assignId, "");
+          loadAssignments();
+        }, 1200);
+
+      } catch (err) {
+        console.error(err);
+        feedbackEl.innerHTML = `<span style="color:var(--accent-2);font-weight:600">Erro: ${err.message || 'Falha ao enviar arquivo. Tente pela página clássica.'}</span>`;
+        feedbackEl.classList.remove("hidden");
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="upload" style="width:14px;height:14px"></i> Tentar Novamente`;
+        lucide.createIcons();
+      }
+    }
+
+    function backFromAssignmentView() {
+      document.getElementById("assignment-page-view").style.display = "none";
+      if (state.previousView === 'course') {
+        document.getElementById("course-page-view").style.display = "block";
+      } else {
+        document.getElementById("main-tabs-view").style.display = "block";
+      }
+      lucide.createIcons();
+    }
+
+    /* ─── CHAT & MENSAGENS DO MOODLE ─── */
+    const chatState = {
+      conversations: [],
+      filtered: [],
+      activeConvId: null,
+      loadingMsgs: false,
+    };
+
+    async function loadConversations(silent = false) {
+      if (!state.user || !state.token) return;
+      const listEl = document.getElementById("chat-conv-list");
+      if (!silent && (!chatState.conversations || !chatState.conversations.length)) {
+        if (listEl) {
+          listEl.innerHTML = `<div class="loading-state" style="padding:28px"><div class="spin"></div><span>Carregando conversas…</span></div>`;
+        }
+      }
+
+      try {
+        const data = await callWs("core_message_get_conversations", { userid: state.user.userid });
+        chatState.conversations = data.conversations || [];
+
+        const searchVal = document.getElementById("chat-search")?.value.trim().toLowerCase() || "";
+        if (searchVal) {
+          filterConversations();
+        } else {
+          chatState.filtered = chatState.conversations;
+          renderConvList();
+        }
+
+        updateChatUnreadBadge();
+      } catch (e) {
+        console.error("Erro ao carregar conversas:", e);
+        if (listEl && !silent) {
+          listEl.innerHTML = `<div style="padding:24px;text-align:center;font-size:12px;color:var(--text-3)">Erro ao carregar conversas do Moodle.</div>`;
+        }
+      }
+    }
+
+    async function updateChatUnreadBadge() {
+      if (!state.user) return;
+      try {
+        const counts = await callWs("core_message_get_unread_conversation_counts", { userid: state.user.userid });
+        let total = 0;
+        if (counts && counts.types) {
+          Object.values(counts.types).forEach(v => total += (Number(v) || 0));
+        }
+        const badge = document.getElementById("side-badge-chat");
+        if (badge) {
+          if (total > 0) {
+            badge.textContent = total;
+            badge.style.display = "inline-flex";
+          } else {
+            badge.style.display = "none";
+          }
+        }
+      } catch (e) {
+        // silencioso
+      }
+    }
+
+    function renderConvList() {
+      const listEl = document.getElementById("chat-conv-list");
+      if (!listEl) return;
+
+      if (!chatState.filtered.length) {
+        listEl.innerHTML = `<div style="padding:28px;text-align:center;font-size:12px;color:var(--text-3)">Nenhuma conversa encontrada.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = chatState.filtered.map(c => {
+        const other = (c.members || []).find(m => m.id !== state.user.userid) || c.members?.[0] || { fullname: "Contato Moodle" };
+        const lastMsg = c.messages?.[0];
+
+        let preview = "";
+        if (lastMsg && lastMsg.text) {
+          const tmp = document.createElement("div");
+          tmp.innerHTML = lastMsg.text;
+          preview = (tmp.textContent || tmp.innerText || "").trim().replace(/\s+/g, " ").slice(0, 52);
+        }
+
+        let timeStr = "";
+        if (lastMsg && lastMsg.timecreated) {
+          const d = new Date(lastMsg.timecreated * 1000);
+          const now = new Date();
+          if (d.toDateString() === now.toDateString()) {
+            timeStr = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+          } else {
+            timeStr = d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+          }
+        }
+
+        const isActive = chatState.activeConvId === c.id;
+        const unread = c.isread === false || (c.unreadcount && c.unreadcount > 0);
+
+        return `
+          <div class="chat-conv-item${isActive ? " active" : ""}" onclick="openConversation(${c.id})">
+            <img class="chat-conv-avatar" src="${other.profileimageurl || other.profileimageurlsmall || ''}" alt="" onerror="this.src='https://moodle.arq.ifsp.edu.br/theme/image.php/boost/core/1792468521/u/f1'">
+            <div class="chat-conv-info">
+              <div class="chat-conv-top">
+                <span class="chat-conv-name" style="${unread ? 'font-weight:700;color:var(--text-1)' : ''}">${other.fullname}</span>
+                <span class="chat-conv-time">${timeStr}</span>
+              </div>
+              <div class="chat-conv-preview" style="${unread ? 'font-weight:600;color:var(--text-1)' : ''}">
+                ${lastMsg && lastMsg.useridfrom === state.user.userid ? '<span style="color:var(--text-3)">Você: </span>' : ''}${preview || 'Sem mensagens'}
+              </div>
+            </div>
+            ${unread ? '<div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0"></div>' : ''}
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function filterConversations() {
+      const q = document.getElementById("chat-search")?.value.trim().toLowerCase() || "";
+      if (!q) {
+        chatState.filtered = chatState.conversations;
+      } else {
+        chatState.filtered = chatState.conversations.filter(c => {
+          const other = (c.members || []).find(m => m.id !== state.user.userid) || c.members?.[0];
+          const name = other?.fullname?.toLowerCase() || "";
+          const msg = c.messages?.[0]?.text?.toLowerCase() || "";
+          return name.includes(q) || msg.includes(q);
+        });
+      }
+      renderConvList();
+    }
+
+    async function openConversation(convId) {
+      chatState.activeConvId = convId;
+      renderConvList();
+
+      const panel = document.getElementById("chat-main-panel");
+      if (!panel) return;
+
+      const conv = chatState.conversations.find(c => c.id === convId);
+      const other = (conv?.members || []).find(m => m.id !== state.user.userid) || conv?.members?.[0] || { fullname: "Conversa" };
+
+      panel.innerHTML = `
+        <div class="chat-header">
+          <div class="chat-header-user">
+            <img class="chat-conv-avatar" src="${other.profileimageurl || ''}" alt="" onerror="this.src='https://moodle.arq.ifsp.edu.br/theme/image.php/boost/core/1792468521/u/f1'">
+            <div>
+              <div class="chat-header-name">${other.fullname}</div>
+              <div class="chat-header-sub">Moodle IFSP · Mensagens</div>
+            </div>
+          </div>
+          <button class="topbar-icon-btn" onclick="refreshActiveConversation()" title="Atualizar mensagens">
+            <i data-lucide="refresh-cw" class="icon"></i>
+          </button>
+        </div>
+        <div class="chat-messages" id="chat-messages-container">
+          <div class="loading-state" style="padding:40px"><div class="spin"></div><span>Carregando histórico…</span></div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="file" id="chat-file-input" style="display:none" onchange="handleChatFileUpload(event, ${convId})">
+          <div class="chat-attach-wrapper">
+            <button class="chat-attach-btn" type="button" onclick="toggleChatAttachMenu()" title="Anexar arquivo">
+              <i data-lucide="paperclip" style="width:16px;height:16px"></i>
+            </button>
+            <div class="chat-attach-menu hidden" id="chat-attach-menu">
+              <button class="chat-attach-menu-item" type="button" onclick="triggerDeviceUpload()">
+                <i data-lucide="upload" class="icon"></i>
+                <span>Enviar do Computador</span>
+              </button>
+              <button class="chat-attach-menu-item" type="button" onclick="openMoodlePrivateFilesModal(${convId})">
+                <i data-lucide="folder-archive" class="icon"></i>
+                <span>Meus Arquivos no Moodle</span>
+              </button>
+            </div>
+          </div>
+          <input class="chat-input" id="chat-input-text" placeholder="Digite uma mensagem para ${(other.fullname || '').split(' ')[0]}…" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendChatMessage(${convId}); }">
+          <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage(${convId})" title="Enviar">
+            <i data-lucide="send" style="width:15px;height:15px"></i>
+          </button>
+        </div>
+        <div id="chat-upload-status" style="display:none;padding:6px 16px;background:var(--accent-bg);color:var(--accent);font-size:11px;align-items:center;gap:8px">
+          <div class="spin" style="width:12px;height:12px;border-width:2px"></div>
+          <span id="chat-upload-status-text">Enviando arquivo…</span>
+        </div>
+      `;
+      lucide.createIcons();
+
+      setTimeout(() => document.getElementById("chat-input-text")?.focus(), 80);
+
+      await loadConversationMessages(convId);
+    }
+
+    async function loadConversationMessages(convId) {
+      chatState.loadingMsgs = true;
+      try {
+        const data = await callWs("core_message_get_conversation_messages", {
+          currentuserid: state.user.userid,
+          convid: convId
+        });
+        renderChatMessages(convId, data.messages || []);
+      } catch (e) {
+        console.error("Erro ao carregar mensagens:", e);
+        const container = document.getElementById("chat-messages-container");
+        if (container) {
+          container.innerHTML = `<div style="padding:24px;text-align:center;font-size:12px;color:var(--text-3)">Erro ao carregar histórico desta conversa.</div>`;
+        }
+      } finally {
+        chatState.loadingMsgs = false;
+      }
+    }
+
+    async function refreshActiveConversation() {
+      if (chatState.activeConvId) {
+        await loadConversationMessages(chatState.activeConvId);
+        await loadConversations(true);
+      }
+    }
+
+    function renderChatMessages(convId, messages) {
+      const container = document.getElementById("chat-messages-container");
+      if (!container || chatState.activeConvId !== convId) return;
+
+      if (!messages.length) {
+        container.innerHTML = `<div style="padding:32px;text-align:center;font-size:12px;color:var(--text-3)">Nenhuma mensagem nesta conversa ainda. 👋</div>`;
+        return;
+      }
+
+      const sorted = [...messages].sort((a,b) => a.timecreated - b.timecreated);
+
+      let html = "";
+      let lastDate = "";
+
+      sorted.forEach(m => {
+        const isMine = m.useridfrom === state.user.userid;
+        const d = new Date(m.timecreated * 1000);
+        const dateStr = d.toLocaleDateString("pt-BR", { weekday: "short", day: "numeric", month: "short" });
+        const timeStr = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+        if (dateStr !== lastDate) {
+          lastDate = dateStr;
+          html += `
+            <div style="align-self:center;margin:10px 0 6px;padding:3px 10px;background:var(--surface-2);border-radius:12px;font-size:10px;color:var(--text-3);font-weight:500;border:1px solid var(--border)">
+              ${dateStr.toUpperCase()}
+            </div>
+          `;
+        }
+
+        let textHtml = m.text || "";
+        textHtml = textHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                           .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "");
+
+        html += `
+          <div class="chat-bubble ${isMine ? "sent" : "received"}">
+            <div>${textHtml}</div>
+            <div class="chat-bubble-time">${timeStr}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      container.scrollTop = container.scrollHeight;
+      lucide.createIcons();
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function getMoodleFileIcon(filename) {
+      const ext = (filename || '').split('.').pop().toLowerCase();
+      const base = "https://moodle.arq.ifsp.edu.br/theme/image.php/boost/core/1792468521/f/";
+      switch(ext) {
+        case "pdf": return base + "pdf";
+        case "zip": case "rar": case "7z": case "tar": case "gz": return base + "archive";
+        case "doc": case "docx": case "odt": case "rtf": return base + "document";
+        case "xls": case "xlsx": case "csv": return base + "spreadsheet";
+        case "ppt": case "pptx": case "odp": return base + "powerpoint";
+        case "png": case "jpg": case "jpeg": case "gif": case "webp": case "svg": return base + "image";
+        case "c": case "cpp": case "h": case "java": case "py": case "js": case "html": case "css": case "sql": case "php": case "circ": return base + "sourcecode";
+        case "mp3": case "wav": case "ogg": return base + "audio";
+        case "mp4": case "mkv": case "avi": case "webm": return base + "video";
+        default: return base + "unknown";
+      }
+    }
+
+    function toggleChatAttachMenu() {
+      const menu = document.getElementById("chat-attach-menu");
+      menu?.classList.toggle("hidden");
+      lucide.createIcons();
+    }
+
+    function closeChatAttachMenu() {
+      const menu = document.getElementById("chat-attach-menu");
+      menu?.classList.add("hidden");
+    }
+
+    function triggerDeviceUpload() {
+      closeChatAttachMenu();
+      document.getElementById("chat-file-input")?.click();
+    }
+
+    let activeConvForFilesModal = null;
+
+    async function openMoodlePrivateFilesModal(convId) {
+      closeChatAttachMenu();
+      activeConvForFilesModal = convId;
+      const modal = document.getElementById("moodle-files-modal");
+      const listEl = document.getElementById("moodle-private-files-list");
+      if (!modal || !listEl) return;
+
+      modal.classList.remove("hidden");
+      modal.style.display = "flex";
+      listEl.innerHTML = `<div class="loading-state" style="padding:28px"><div class="spin"></div><span>Carregando seus arquivos do Moodle…</span></div>`;
+      lucide.createIcons();
+
+      try {
+        const res = await callWs("core_files_get_files", {
+          contextid: 137711,
+          component: "user",
+          filearea: "private",
+          filepath: "/",
+          filename: ""
+        });
+
+        const files = (res.files || []).filter(f => !f.isdir);
+
+        if (!files.length) {
+          listEl.innerHTML = `
+            <div style="padding:32px;text-align:center;color:var(--text-3);font-size:12px">
+              Nenhum arquivo encontrado em <a href="https://moodle.arq.ifsp.edu.br/user/files.php" target="_blank" style="color:var(--accent);text-decoration:underline">Arquivos Privados</a> do seu Moodle.
+            </div>
+          `;
+          return;
+        }
+
+        listEl.innerHTML = files.map(f => {
+          const iconUrl = getMoodleFileIcon(f.filename);
+          const sizeStr = f.filesize < 1024 * 1024
+            ? (f.filesize / 1024).toFixed(0) + " KB"
+            : (f.filesize / 1024 / 1024).toFixed(1) + " MB";
+          const escName = escapeHtml(f.filename);
+
+          return `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);gap:12px">
+              <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">
+                <img src="${iconUrl}" width="28" height="28" alt="" style="flex-shrink:0">
+                <div style="min-width:0">
+                  <div style="font-size:12px;font-weight:600;color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escName}">${escName}</div>
+                  <div style="font-size:10px;color:var(--text-3);margin-top:2px">${sizeStr} · Moodle IFSP (files.php)</div>
+                </div>
+              </div>
+              <button class="topbar-btn" style="padding:6px 12px;font-size:11px;gap:6px;flex-shrink:0" onclick="sendExistingMoodleFile('${escapeJs(f.filename)}', ${f.filesize})">
+                <i data-lucide="send" style="width:12px;height:12px"></i>
+                Enviar no Chat
+              </button>
+            </div>
+          `;
+        }).join("");
+
+        lucide.createIcons();
+
+      } catch (e) {
+        console.error("Erro ao carregar arquivos privados:", e);
+        listEl.innerHTML = `<div style="padding:24px;text-align:center;color:var(--accent-2);font-size:12px">Erro ao buscar arquivos no Moodle.</div>`;
+      }
+    }
+
+    function closeMoodlePrivateFilesModal() {
+      const modal = document.getElementById("moodle-files-modal");
+      if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+      }
+    }
+
+    async function sendExistingMoodleFile(filename, filesize) {
+      const convId = activeConvForFilesModal || chatState.activeConvId;
+      if (!convId) return;
+
+      closeMoodlePrivateFilesModal();
+
+      const sizeStr = filesize < 1024 * 1024
+        ? (filesize / 1024).toFixed(0) + " KB"
+        : (filesize / 1024 / 1024).toFixed(1) + " MB";
+
+      const iconUrl = getMoodleFileIcon(filename);
+      const fileNameEscaped = escapeHtml(filename);
+      const dlUrl = `${state.serverUrl}/webservice/pluginfile.php/137711/user/private/${encodeURIComponent(filename)}?token=${state.token}&forcedownload=1`;
+
+      const msgHtml = `<p><a href="${dlUrl}" target="_blank" class="_blanktarget chat-file-card" rel="noopener noreferrer" style="display:inline-block;padding:8px 14px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;text-decoration:none;color:#1f2937;font-family:sans-serif;font-size:12px;font-weight:600"><img src="${iconUrl}" width="22" height="22" alt="" style="vertical-align:middle;margin-right:8px;pointer-events:none"><strong style="pointer-events:none">${fileNameEscaped}</strong> <span style="font-weight:normal;color:#4b5563;pointer-events:none">(${sizeStr})</span> &nbsp;⬇️ Baixar</a></p>`;
+
+      try {
+        const res = await callWs("core_message_send_messages_to_conversation", {
+          conversationid: convId,
+          "messages[0][text]": msgHtml,
+          "messages[0][textformat]": 1
+        });
+
+        if (res && (res.exception || res.errorcode)) {
+          throw new Error(res.message || "Erro retornado pelo Moodle.");
+        }
+
+        await loadConversationMessages(convId);
+        loadConversations(true);
+
+      } catch (err) {
+        console.error("Erro ao enviar arquivo existente:", err);
+        alert("Falha ao enviar arquivo: " + (err.message || "Erro desconhecido"));
+      }
+    }
+
+    async function sendChatMessage(convId) {
+      closeChatAttachMenu();
+      const input = document.getElementById("chat-input-text");
+      const btn = document.getElementById("chat-send-btn");
+      if (!input || !btn) return;
+
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.disabled = true;
+      btn.disabled = true;
+
+      try {
+        const res = await callWs("core_message_send_messages_to_conversation", {
+          conversationid: convId,
+          "messages[0][text]": text,
+          "messages[0][textformat]": 1
+        });
+
+        if (res && (res.exception || res.errorcode)) {
+          throw new Error(res.message || "Erro retornado pelo Moodle.");
+        }
+
+        input.value = "";
+        await loadConversationMessages(convId);
+        loadConversations(true);
+      } catch (e) {
+        console.error("Falha ao enviar mensagem:", e);
+        alert("Não foi possível enviar a mensagem: " + (e.message || "Erro desconhecido"));
+      } finally {
+        input.disabled = false;
+        btn.disabled = false;
+        input.focus();
+      }
+    }
+
+    async function handleChatFileUpload(event, convId) {
+      closeChatAttachMenu();
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
+      event.target.value = "";
+
+      const maxBytes = 10 * 1024 * 1024;
+      if (file.size > maxBytes) {
+        alert("O arquivo é muito grande (" + (file.size / 1024 / 1024).toFixed(1) + " MB). O limite máximo é de 10 MB.");
+        return;
+      }
+
+      const statusWrap = document.getElementById("chat-upload-status");
+      const statusText = document.getElementById("chat-upload-status-text");
+      const sendBtn = document.getElementById("chat-send-btn");
+      const attachBtn = document.querySelector(".chat-attach-btn");
+
+      if (statusWrap && statusText) {
+        statusWrap.style.display = "flex";
+        statusText.textContent = `Enviando "${file.name}" para o Moodle (${(file.size / 1024 / 1024).toFixed(2)} MB)…`;
+      }
+      if (sendBtn) sendBtn.disabled = true;
+      if (attachBtn) attachBtn.disabled = true;
+
+      let dlUrl = "";
+
+      // Tentativa 1: Hospedar nos Arquivos Privados do Moodle (user/files.php)
+      try {
+        const draftData = await callWs("core_files_get_unused_draft_itemid");
+        const draftId = draftData.itemid;
+
+        const fd = new FormData();
+        fd.append("file", file, file.name);
+
+        const upRes = await fetch(`${state.serverUrl}/webservice/upload.php?token=${state.token}&itemid=${draftId}`, {
+          method: "POST",
+          body: fd
+        });
+        const upJson = await upRes.json();
+
+        if (Array.isArray(upJson) && upJson.length > 0) {
+          await callWs("core_user_add_user_private_files", { draftid: draftId });
+          dlUrl = `${state.serverUrl}/webservice/pluginfile.php/137711/user/private/${encodeURIComponent(file.name)}?token=${state.token}&forcedownload=1`;
+        } else {
+          throw new Error("Upload Moodle falhou");
+        }
+      } catch (moodleErr) {
+        console.warn("Upload direto para arquivos privados do Moodle falhou, usando fallback com download direto:", moodleErr);
+        try {
+          const fd = new FormData();
+          fd.append("file", file, file.name);
+          const upRes = await fetch("https://tmpfiles.org/api/v1/upload", { method: "POST", body: fd });
+          const data = await upRes.json();
+          if (data?.data?.url) {
+            dlUrl = data.data.url.replace("https://tmpfiles.org/", "https://tmpfiles.org/dl/");
+          } else {
+            throw new Error("Serviço de upload indisponível.");
+          }
+        } catch(fallbackErr) {
+          alert("Não foi possível enviar o arquivo: " + fallbackErr.message);
+          if (statusWrap) statusWrap.style.display = "none";
+          if (sendBtn) sendBtn.disabled = false;
+          if (attachBtn) attachBtn.disabled = false;
+          return;
+        }
+      }
+
+      const sizeStr = file.size < 1024 * 1024
+        ? (file.size / 1024).toFixed(0) + " KB"
+        : (file.size / 1024 / 1024).toFixed(1) + " MB";
+
+      const iconUrl = getMoodleFileIcon(file.name);
+      const fileNameEscaped = escapeHtml(file.name);
+
+      const msgHtml = `<p><a href="${dlUrl}" target="_blank" class="_blanktarget chat-file-card" rel="noopener noreferrer" style="display:inline-block;padding:8px 14px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;text-decoration:none;color:#1f2937;font-family:sans-serif;font-size:12px;font-weight:600"><img src="${iconUrl}" width="22" height="22" alt="" style="vertical-align:middle;margin-right:8px;pointer-events:none"><strong style="pointer-events:none">${fileNameEscaped}</strong> <span style="font-weight:normal;color:#4b5563;pointer-events:none">(${sizeStr})</span> &nbsp;⬇️ Baixar</a></p>`;
+
+      try {
+        const res = await callWs("core_message_send_messages_to_conversation", {
+          conversationid: convId,
+          "messages[0][text]": msgHtml,
+          "messages[0][textformat]": 1
+        });
+
+        if (res && (res.exception || res.errorcode)) {
+          throw new Error(res.message || "Erro retornado pelo Moodle.");
+        }
+
+        await loadConversationMessages(convId);
+        loadConversations(true);
+
+      } catch (err) {
+        console.error("Erro no envio do arquivo:", err);
+        alert("Falha ao enviar arquivo pelo chat: " + (err.message || "Erro desconhecido"));
+      } finally {
+        if (statusWrap) statusWrap.style.display = "none";
+        if (sendBtn) sendBtn.disabled = false;
+        if (attachBtn) attachBtn.disabled = false;
+      }
+    }
+
+    /* ─── NAVEGAÇÃO POR ABAS ─── */
+    function switchTab(tab) {
+      const tabs = ["courses","tasks","timetable","chat"];
+
+      tabs.forEach(t => {
+        const el    = document.getElementById(`tab-${t}`);
+        const side  = document.getElementById(`side-nav-${t}`);
+        const mob   = document.getElementById(`mob-${t}`);
+
+        const isActive = t === tab;
+        el?.classList.toggle("hidden", !isActive);
+        side?.classList.toggle("active", isActive);
+        mob?.classList.toggle("active", isActive);
+      });
+
+      if (tab !== "courses" && state.activeCourseId) backToCoursesView();
+      const apv = document.getElementById("assignment-page-view");
+      if (apv && apv.style.display !== "none") {
+        apv.style.display = "none";
+        document.getElementById("main-tabs-view").style.display = "block";
+      }
+
+      if (tab === "chat" && state.user) {
+        if (!chatState.conversations || !chatState.conversations.length) {
+          loadConversations();
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function handleSearch() { applyFilters(); }
+
+    function refreshAllData() {
+      if (state.user) {
+        loadCourses(state.user.userid);
+        loadAssignments();
+        updateChatUnreadBadge();
+        const chatSec = document.getElementById("tab-chat");
+        if (chatSec && !chatSec.classList.contains("hidden")) {
+          loadConversations();
+        }
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem("moodle_token");
+      state.token = null;
+      state.user = null;
+      showLogin();
+    }
+  </script>
+</body>
+</html>
